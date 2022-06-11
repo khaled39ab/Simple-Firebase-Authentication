@@ -1,6 +1,6 @@
 import './App.css';
 import app from './firebase.init';
-import { FacebookAuthProvider, getAuth, GithubAuthProvider, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
+import { FacebookAuthProvider, getAuth, GithubAuthProvider, GoogleAuthProvider, OAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import { useState } from 'react';
 
 const auth = getAuth(app)
@@ -8,6 +8,7 @@ function App() {
   const googleProvider = new GoogleAuthProvider();
   const githubProvider = new GithubAuthProvider();
   const facebookProvider = new FacebookAuthProvider();
+  const microsoftProvider = new OAuthProvider();
 
   const [user, setUser] = useState({});
 
@@ -46,6 +47,18 @@ function App() {
     })
     .catch(err => console.log(err))
   }
+
+  const handleMicrosoftSignIn =() =>{
+    signInWithPopup(auth, microsoftProvider)
+    .then(res =>{
+      const user = res.user;
+      setUser(user);
+      console.log(user);
+    })
+    .catch(err =>{
+      console.log(err);
+    })
+  }
  
   return (
     <div className="App">
@@ -56,6 +69,7 @@ function App() {
           <button onClick={handleGoogleSignIn}>Google Sign In</button>
           <button onClick={handleFacebookSignIn}>Facebook Sign In</button>
           <button onClick={handleGithubSignIn}>Github Sign In</button>
+          <button onClick={handleMicrosoftSignIn}>Microsoft Sign In</button>
         </>
       }
       <h2>Name: {user.displayName}</h2>
